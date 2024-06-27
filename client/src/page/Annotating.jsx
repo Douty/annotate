@@ -20,17 +20,18 @@ function Annotating() {
       console.error("Error fetching stories:", error);
     }
   }
+  useEffect(()=>{
+    getStories();
+  },[])
 
   const handleNextIndex = () => {
     if (currentIndex < answers.length - 1){
       setCurrentIndex(currentIndex + 1);
-      console.log(currentIndex);
     }
   }
   const handlePreviousIndex = () => {
     if (currentIndex > 0){
       setCurrentIndex(currentIndex - 1);
-      console.log(currentIndex);
     }
   }
   const handlePromptText = (e) =>{
@@ -43,7 +44,6 @@ function Annotating() {
       newAnswers[currentIndex][field] = e.target.value;
       setAnswers(newAnswers);
     }
-    console.log(answers[currentIndex]?.relevance);
   }
 
   const handleSubmit = async() =>{
@@ -97,9 +97,9 @@ function Annotating() {
               
             </div>
             <div className='flex gap-3'>
-              <button className='button-style' onClick={()=>{handlePreviousIndex()}}>Previous</button>
-              <button className='button-style' onClick={()=>{handleNextIndex()}}>Next</button>
-              <button className={`button-style ${currentIndex == answers.length - 1 ? 'show' : 'hidden'}`} onClick={handleSubmit}>Complete</button>
+              <button className='button-style' onClick={handlePreviousIndex}>Previous</button>
+              <button className='button-style' onClick={handleNextIndex}>Next</button>
+              <button className={`button-style ${currentIndex === answers.length - 1 ? 'show' : 'hidden'}`} onClick={handleSubmit}>Complete</button>
             </div>
           </div>
         </div>
@@ -114,13 +114,13 @@ function Annotating() {
             <textarea 
               className="p-2 w-[400px] bg-gray-5 resize-none border-2" 
               type="text" 
-              onChange={(e) => handlePromptText(e)} 
+              onChange={handlePromptText} 
             />
             <button 
               className='button-style' 
               onClick={() => { 
                 setSubmission(true); 
-                getStories();
+                
               }}
             >
               Submit

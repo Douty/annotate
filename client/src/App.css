@@ -3,6 +3,20 @@
 @tailwind utilities;
 
 
-.button-style{
-    @apply bg-Eeire text-floralwhite p-4 w-[150px];
+
+::selection{
+    @apply bg-primary-300 decoration-4
+}
+
+.button{
+    @apply p-5 bg-primary-400 rounded-lg text-darkSurface-100 hover:bg-primary-300 ;
+}
+.button-input{
+    @apply p-3 bg-primary-400 rounded-lg text-darkSurface-100 hover:bg-primary-300 ;
+}
+.card{
+    @apply flex gap-3  hover:bg-darkSurface-300;
+}
+.card-data{
+    @apply h-[250px] overflow-auto;
 }

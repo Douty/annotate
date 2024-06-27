@@ -1,55 +1,50 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios';
+import { useNavigate, Link } from 'react-router-dom';
 import '../App.css';
-import { useNavigate } from 'react-router-dom';
-
+import InputCard from '../components/InputCard';
+import SideBar from '../components/SideBar';
 function Home() {
-  const [file, setFile] = useState(null);
+  const [isImporting, setIsImporting] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [dataset, setDataset] = useState([]);
   const [msg, setMsg] = useState(null);
+  const [username, setUsername] = useState('Person 1');
  
   const navigate = useNavigate();
+
+
   
   const handleSubmit = () =>{
-    if (!file){
-      setMsg("No File found")
-    } else {
-      const formData = new FormData();
-      formData.append('file', file);
-    
-      axios.post("/api/upload", formData ,{headers:{'Content-Type': 'multipart/form-data'}}).then(res =>{
-        if (res.status === 200){
-            console.log(res.data);
-            navigate("/annotating");
-        }
-      });
-      
+    if (isImporting){
+      navigate("/ImportAnnotation");
+    } else if (isCreating){
+      navigate("/CreateAnnotation");
     }
-  }
-  const handleFile = (file) =>{
-
-    if (file){
-      setFile(file);
-      console.log("Successful!");
-    } else {
-      setFile(null);
-      
-    }
-    
   }
  
+
   return (
-    <div className='flex flex-col justify-center items-center min-h-screen bg-blacksteel'>
-      <div className='flex  flex-col text-center bg-floralwhite h-[500px] w-[500px] rounded-xl justify-center items-center gap-3'>
-        <h1 className='text-4xl'>Dataset annotator</h1>
-        <h1 className='text-xl'>Please provide a csv file to annotate!</h1>
-        <h1 className=' '>{msg}</h1>
-        <input  type="file" accept="text/csv" onChange={(e)=>{handleFile(e.target.files[0])}} placeholder='Enter CSV file!'/>
-        <button className='bg-Eeire text-floralwhite p-4 w-[150px]' onClick={handleSubmit}>Upload</button>
+    <div className='flex'>
+      <SideBar />
+    
+      <div className='flex bg-darkSurface-100 min-h-screen w-[100%] justify-center items-center flex-col gap-10'>
+        <div className='flex m-5 gap-3'  >
+          <label className='text-offWhite text-xl '>Username: </label>
+          <input type="text" placeholder='Bob' className='p-2 rounded-2xl w-[300px] bg-darkSurface-300 text-offWhite' onChange={(e)=>{setUsername(e.target.value)}}/>
+          <button className='button-input'>set username</button>
+        </div>
+        <h1 className='mb-10 text-offWhite text-5xl w-[50%]'>Hi there, to start annotating import an existing dataset or create a new one!</h1>
         
+        {msg && <p className='text-red-500'>{msg}</p>}
+        <div className='flex justify-center items-center gap-32 text-2xl'>
+          <button className='button' onClick={()=>{setIsImporting(true), handleSubmit()}}>Import</button>
+          <button className='button' onClick={()=>{setIsCreating(true),handleSubmit()}}>Create new</button>  
+        </div>
       </div>
-      
+        
     </div>
-  )
-}
+  );
+};
 
 export default Home
